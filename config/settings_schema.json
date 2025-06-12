@@ -1,0 +1,22 @@
+,
+{
+  "name": "Clerk settings",
+  "settings": [
+    {
+    "type": "header",
+    "content": "Clerk"
+    },
+    {
+    "type": "checkbox",
+    "id": "enable_clerk",
+    "label": "Enable Clerk",
+    "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "exclude_duplicates",
+      "label": "Exclude duplicates",
+      "default": false
+    } 
+  ]
+}

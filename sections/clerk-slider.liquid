@@ -1,0 +1,287 @@
+<section class="section-{{ section.id }} clerk-section-{{ section.id }} container">
+  <div class="clerk-headline-wrapper">
+    <h1 class="collection__title heading h1">{{ section.settings.title }}</h1>
+  </div>
+  <div class="swiper clerk-swiper">
+    <div class="swiper-wrapper clerk-swiper-wrapper"
+      data-endpoint="{{ section.settings.clerk_endpoint }}"
+      {%- if product -%}
+      data-product={{- product.id -}}
+      {% endif %}
+      {% if template.name == 'cart' %}
+      data-products="[{% for line_item in cart.items %}{% if forloop.index0 > 0 %}, {% endif %}{{ line_item.product.id }}{% endfor %}]"
+      {% endif %}
+      {% if collection %}
+      data-category={{ collection.id }}
+      {% endif %}
+      data-labels="{{ section.settings.clerk_endpoint }}"
+      data-limit={{ section.settings.number_of_products }}
+    ></div>
+    <div class="swiper-button-next carousel-navigation-button clerk-next-button clerk-arrow-wrapper">
+      <div class="clerk-slider-navigation clerk-slider-navigation-next">&nbsp;</div>
+    </div>
+    <div class="swiper-button-prev carousel-navigation-button clerk-prev-button clerk-arrow-wrapper">
+      <div class="clerk-slider-navigation clerk-slider-navigation-prev">&nbsp;</div>
+    </div>
+    <div class="swiper-pagination clerk-pagination"></div>
+  </div>
+</section>
+
+<style>
+  :root {
+    --swiper-pagination-color: {{ section.settings.pagination_color }};
+  }
+  .clerk-headline {
+    font-size: 4rem;
+  }
+  .clerk-swiper-wrapper {
+    height: 100%;
+    width: 100%;
+  }
+  .clerk-slide {
+    padding: 0 0 3rem 0;
+  }
+  .swiper-button-next:after, 
+  .swiper-button-prev:after {
+    content: "" !important;
+  }
+  .clerk-slide .product-item__title {
+    min-height: 46.49px;
+  }
+  @media screen and (min-width: 1024px) {
+    .clerk-slider-navigation {
+      background-color: white!important;
+      background-image: none!important;
+      width: 37px!important;
+      height: 37px!important;
+      border: 1px solid #ccc;
+    }
+    .clerk-slider-navigation-next:after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 40%;
+      border: solid black;
+      border-width: 0 2px 2px 0;
+      display: inline-block;
+      padding: 3px;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      -webkit-transform: translate(-50%, -50%) rotate(-45deg);
+    }
+    .clerk-slider-navigation-prev:after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 60%;
+      border: solid black;
+      border-width: 0 2px 2px 0;
+      display: inline-block;
+      padding: 3px;
+      transform: translate(-50%, -50%) rotate(135deg);
+      -webkit-transform: translate(-50%, -50%) rotate(135deg);
+    }
+  }
+</style>
+
+<script type="module">
+  import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs';
+
+  var clerk_swiper = new Swiper('.clerk-swiper', {
+  "rewind": true,
+  "navigation": {
+    "nextEl": ".clerk-next-button",
+    "prevEl": ".clerk-prev-button"
+  },
+  "spaceBetween": 5,
+  "pagination": { 
+    "el": ".clerk-pagination",
+    "clickable": true
+  },
+  "slidesPerView": {{ section.settings.cards_per_view_mobile }},
+  "breakpoints": {
+    "640": {
+      "slidesPerView": {{ section.settings.cards_per_view_mobile }},
+      "spaceBetween": 5
+    },
+    "768": {
+      "slidesPerView": {{ section.settings.cards_per_view_tablet }},
+      "spaceBetween": 5
+    },
+    "1024": {
+      "slidesPerView": {{ section.settings.cards_per_view_desktop }},
+      "spaceBetween": 5
+    }
+  },
+  on: {
+  init: function () {
+    this.slides.forEach((slide, index) => {
+      slide.setAttribute('data-swiper-slide-index', index);
+    });
+  },
+  slideChange: function () {
+    this.slides.forEach((slide, index) => {
+      slide.setAttribute('data-swiper-slide-index', index);
+    });
+  }
+}
+});
+</script>
+{%  schema  %}
+  {
+    "name": "Clerk slider",
+    "class": "shopify-section--featured-collection",
+    "tag": "section",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Slider settings"
+      },
+      {
+        "type": "select",
+        "id": "clerk_endpoint",
+        "label": "Clerk API Endpoint",
+        "options": [
+          {
+            "group": "Regular",
+            "value": "recommendations/popular",
+            "label": "Bestsellers"
+          },
+          {
+            "group": "Regular",
+            "value": "recommendations/trending",
+            "label": "Trending"
+          },
+          {
+            "group": "Regular",
+            "value": "recommendations/new",
+            "label": "Newly added products"
+          },
+          {
+            "group": "Regular",
+            "value": "recommendations/currently_watched",
+            "label": "Visitors Are Looking At"
+          }, 
+          {
+            "group": "Regular",
+            "value": "recommendations/recently_bought",
+            "label": "Recently bought"
+          }, 
+          {
+            "group": "Product/Cart page",
+            "value": "recommendations/complementary",
+            "label": "Best Cross-Sell Products"
+          }, 
+          {
+            "group": "Product/Cart page",
+            "value": "recommendations/substituting",
+            "label": "Product Alternatives"
+          }, 
+          {
+            "group": "Category",
+            "value": "recommendations/category/popular",
+            "label": "Category Popular"
+          }, 
+          {
+            "group": "Category",
+            "value": "recommendations/category/trending",
+            "label": "Category Trending"
+          }, 
+          {
+            "group": "Category",
+            "value": "recommendations/category/new",
+            "label": "Category New Products"
+          }, 
+          {
+            "group": "Category",
+            "value": "recommendations/category/popular_subcategories",
+            "label": "Category Popular Subcategories"
+          }, 
+          {
+            "group": "Visitor",
+            "value": "recommendations/visitor/history",
+            "label": "Visitor History"
+          }, 
+          {
+            "group": "Visitor",
+            "value": "recommendations/visitor/complementary",
+            "label": "Visitor Recommendations"
+          }, 
+          {
+            "group": "Visitor",
+            "value": "recommendations/visitor/substituting",
+            "label": "Visitor Alternatives"
+          }, 
+          {
+            "group": "Customer",
+            "value": "recommendations/customer/history",
+            "label": "Customer History"
+          }, 
+          {
+            "group": "Customer",
+            "value": "recommendations/customer/complementary",
+            "label": "Customer Recommendations"
+          }, 
+          {
+            "group": "Customer",
+            "value": "recommendations/customer/substituting",
+            "label": "Customer Alternatives"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "cards_per_view_desktop",
+        "default": 4,
+        "min": 4,
+        "max": 12,
+        "step": 0.5,
+        "label": "Cards per view - Desktop"
+      },
+      {
+        "type": "range",
+        "id": "cards_per_view_tablet",
+        "default": 3,
+        "min": 1,
+        "max": 12,
+        "step": 0.5,
+        "label": "Cards per view - Tablet"
+      },
+      {
+        "type": "range",
+        "id": "cards_per_view_mobile",
+        "default": 2,
+        "min": 1,
+        "max": 12,
+        "step": 0.5,
+        "label": "Cards per view - Mobile"
+      },
+      {
+        "type": "range",
+        "id": "number_of_products",
+        "label": "Products in the slider",
+        "info": "This will change the total amount of products imported in the slider",
+        "default": 12,
+        "min": 4,
+        "max": 18,
+        "step": 1
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Slider headline",
+        "default": "Collection Title"
+      },
+      {
+        "type": "color",
+        "id": "pagination_color",
+        "label": "Pagination color",
+        "default": "#121212"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Clerk Slider"
+      }
+    ]
+  }
+{% endschema %}

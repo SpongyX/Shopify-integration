@@ -1,0 +1,8 @@
+{% comment %}
+  Inject this snippet alongside the original Clerk.io implementation.  
+{% endcomment %}
+{% if settings.enable_clerk %}
+  {% render 'clerk-tracking' %}
+  <script src="{{ 'get-clerk-data.js' | asset_url }}" type="module" defer="defer"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+{% endif %}
