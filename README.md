@@ -20,6 +20,7 @@ Create a new file named [`assets/get-clerk-data.js`](assets/get-clerk-data.js).
 
 ### 4. Update the Theme Layout
 
+### 5. From theme customize add a new section and select Clerk slider
 Add the following code to [`layout/theme.liquid`](layout/theme.liquid) to ensure the slider runs:
 
 ```liquid
